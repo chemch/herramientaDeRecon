@@ -7,9 +7,11 @@ import com.chemch.mienta.model.upload.Upload;
 import com.chemch.mienta.model.upload.UploadType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -27,10 +29,16 @@ public class UploadService {
         datasetManager.convert(parsed, datasetType);
     }
 
-    public void uploadMultiDataset(JsonArray uploads, UploadType uploadType, DatasetType datasetType) {
-//        for (JsonArray)
-//        for (JsonElement dataset : uploads) {
-//            uploadDataset(dataset.getAsJsonObject(), uploadType, datasetType);
-//        }
+    public void uploadMultiDataset(JsonArray uploadArr, UploadType uploadType, DatasetType datasetType) {
+        for (JsonElement upload : uploadArr) {
+            JsonArray uploadJsonArray = (JsonArray) upload;
+            uploadDataset(uploadJsonArray, uploadType, datasetType);
+        }
+    }
+
+    public List<String> getUploadIds() {
+        List<String> uploadIds = new ArrayList<>();
+        datasetManager.getDatasets().forEach((_, dataset) -> uploadIds.add(dataset.getUpload().getId().toString()));
+        return uploadIds;
     }
 }

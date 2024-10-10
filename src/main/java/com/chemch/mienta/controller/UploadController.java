@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @Controller
@@ -33,6 +35,12 @@ public class UploadController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping(value = "ids", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<String>> getUploadIds() {
+        List<String> uploadIds = uploadService.getUploadIds();
+        return new ResponseEntity<>(uploadIds, HttpStatus.OK);
     }
 
     @PutMapping("multi-dataset/{datasetType}")
