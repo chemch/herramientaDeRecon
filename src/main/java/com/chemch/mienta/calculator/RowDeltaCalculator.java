@@ -3,7 +3,6 @@ package com.chemch.mienta.calculator;
 import com.chemch.mienta.model.ReconConfig;
 import com.chemch.mienta.model.dataset.Dataset;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,18 +40,19 @@ public class RowDeltaCalculator {
                         continue;
 
                     // compare this row to all rows in the other datasets, deleting them when a match is found
-                    boolean thisRowMatched = false;
                     for (Map<String, Object> thatRow : thatDataset) {
-                        if (thisRow.equals(thatRow))
-                            thisRowMatched = true;
-                    }
-
-                    // after looping through other datasets, add this as break if not matched
-                    if (!thisRowMatched) {
-                        rowDeltaArr.add(thisRow.toString());
+                        if (thisRow.equals(thatRow)) {
+                            thisDataset.remove(thisRow);
+                            thatDataset.remove(thatRow);
+                        }
                     }
                 }
             }
+        }
+
+        // add whatever rows remain as that is the delta of rows
+        for ( Set<Map<String, Object>> deltaDataset: datasetEntryLists) {
+            rowDeltaArr.add(deltaDataset.toString());
         }
 
         return rowDeltaArr;
