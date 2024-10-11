@@ -2,6 +2,7 @@ package com.chemch.mienta.service;
 
 import com.chemch.mienta.manager.DatasetManager;
 import com.chemch.mienta.manager.UploadManager;
+import com.chemch.mienta.model.dataset.Dataset;
 import com.chemch.mienta.model.dataset.DatasetType;
 import com.chemch.mienta.model.upload.Upload;
 import com.chemch.mienta.model.upload.UploadType;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -39,8 +41,14 @@ public class UploadService {
      * @param datasetType
      */
     public void uploadDataset(JsonArray upload, UploadType uploadType, DatasetType datasetType) {
+        // parse upload
         Upload parsed = uploadManager.parse(upload, uploadType);
-        datasetManager.convert(parsed, datasetType);
+
+        // convert to dataset
+        Dataset converted = datasetManager.convert(parsed, datasetType);
+
+        // register upload to dataset for quick lookup
+        uploadManager.register(parsed, converted);
     }
 
     /**
@@ -64,5 +72,15 @@ public class UploadService {
         List<String> uploadIds = new ArrayList<>();
         datasetManager.getDatasets().forEach((_, dataset) -> uploadIds.add(dataset.getUpload().getId().toString()));
         return uploadIds;
+    }
+
+    public List<UUID> getDatasetIdsByUploadIds(List<UUID> uploadIds) {
+        List<UUID> datasetIds = new ArrayList<>();
+
+        // pull datasetIds from upload mapping
+        for (UUID uploadId : uploadIds)
+            datasetIds.add(uploadManager.getUploadToDatasetMap().get(uploadId));
+
+        return datasetIds;
     }
 }

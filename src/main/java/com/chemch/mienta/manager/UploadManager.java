@@ -1,6 +1,7 @@
 package com.chemch.mienta.manager;
 
 import com.chemch.mienta.factory.UploadFactory;
+import com.chemch.mienta.model.dataset.Dataset;
 import com.chemch.mienta.model.upload.Upload;
 import com.chemch.mienta.model.upload.UploadType;
 import com.google.gson.JsonArray;
@@ -15,6 +16,9 @@ import java.util.*;
  */
 @Component
 public class UploadManager {
+    @Getter
+    private final Map<UUID, UUID> uploadToDatasetMap = new HashMap<>();
+
     private final UploadFactory factory;
 
     /**
@@ -42,4 +46,12 @@ public class UploadManager {
         // register parsed upload
         return this.factory.create(uploadJson, type);
     };
+
+    /**
+     * @param upload
+     * @param dataset
+     */
+    public void register(Upload upload, Dataset dataset) {
+        this.uploadToDatasetMap.put(upload.getId(), dataset.getId());
+    }
 }

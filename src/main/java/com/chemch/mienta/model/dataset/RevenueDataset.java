@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -17,6 +18,36 @@ public class RevenueDataset extends Dataset {
     @Getter
     private final Set<Entry> entries;
 
+    public Set<Entry> getEntries() {
+        return entries;
+    }
+
+    @Override
+    public Set<Map<String, Object>> getGenerifiedEntries(List<String> compareFields) throws IllegalAccessException {
+        // convert set of entries to objects
+        Set<Map<String, Object>> generifiedEntries = new HashSet<>();
+
+        // for each entry, convert it to a hashmap
+        for(Entry entry : this.entries) {
+            Map<String, Object> entryValueMap = new HashMap<>();
+            Field[] entryFields = entry.getClass().getDeclaredFields();
+
+            // parse fields on the object using reflection
+            for (Field field: entryFields) {
+                // only include the field if it was specified as a compare field in the configuration
+                if(compareFields.contains(field.getName())) {
+                    field.setAccessible(true);
+                    entryValueMap.put(field.getName(), field.get(entry));
+                }
+            }
+
+            // add entry map to entries set
+            generifiedEntries.add(entryValueMap);
+        }
+
+        return generifiedEntries;
+    };
+
     private RevenueDataset(Builder builder) {
         // set upload
         super(builder.upload);
@@ -25,20 +56,16 @@ public class RevenueDataset extends Dataset {
         this.entries = builder.entries;
     }
 
-    private static class Entry implements Comparable<Entry> {
-        @Getter
+    @Getter
+    public static class Entry implements Comparable<Entry> {
         private final String fund;
 
-        @Getter
         private final Integer year;
 
-        @Getter
         private final Double amount;
 
-        @Getter
         private Double potentialHighAmount;
 
-        @Getter
         private Double potentialLowAmount;
 
         private Entry(String fund, Integer year, Double amount, Double potentialHighAmount, Double potentialLowAmount) {

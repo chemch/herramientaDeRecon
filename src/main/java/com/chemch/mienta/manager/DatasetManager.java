@@ -18,6 +18,7 @@ import java.util.UUID;
 public class DatasetManager {
     @Getter
     private final Map<UUID, Dataset> datasets = new HashMap<>();
+
     private final DatasetFactory factory;
 
     /**
@@ -42,8 +43,10 @@ public class DatasetManager {
         // convert upload to applicable dataset
         Dataset dataset = factory.create(upload, type);
 
-        // validate and register newly converted dataset
+        // validate newly formed dataset
         validate(dataset);
+
+        // register new dataset
         this.datasets.put(dataset.getId(), dataset);
 
         return dataset;

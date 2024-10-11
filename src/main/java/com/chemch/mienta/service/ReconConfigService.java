@@ -16,6 +16,8 @@ import java.util.*;
 @Service
 @Slf4j
 public class ReconConfigService {
+    private final String NO_CONFIG_ID = "NOT_AVAILABLE";
+
     @Getter
     private ReconConfig activeConfig;
 
@@ -31,6 +33,11 @@ public class ReconConfigService {
     public void loadConfig(JsonObject configJson) {
         ReconConfig config = gson.fromJson(configJson, ReconConfig.class);
         this.configs.put(config.getId(), config);
+    }
+
+    public String getActiveConfigId() {
+        ReconConfig activeReconConfig = getActiveConfig();
+        return activeReconConfig != null ? activeReconConfig.getId().toString(): NO_CONFIG_ID;
     }
 
     /**

@@ -4,6 +4,7 @@ import com.chemch.mienta.model.upload.Upload;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -15,6 +16,29 @@ public class ExpenseDataset extends Dataset {
 
     @Getter
     private final Set<Entry> entries = new TreeSet<>();
+
+    @Override
+    public Set<Map<String, Object>> getGenerifiedEntries(List<String> compareFields) throws IllegalAccessException {
+        // convert set of entries to objects
+        Set<Map<String, Object>> generifiedEntries = new HashSet<>();
+
+        // for each entry, convert it to a hashmap
+        for(ExpenseDataset.Entry entry : this.entries) {
+            Map<String, Object> entryValueMap = new HashMap<>();
+            Field[] entryFields = entry.getClass().getDeclaredFields();
+
+            // parse fields on the object using reflection
+            for (Field field: entryFields) {
+                field.setAccessible(true);
+                entryValueMap.put(field.getName(), field.get(entry));
+            }
+
+            // add entry map to entries set
+            generifiedEntries.add(entryValueMap);
+        }
+
+        return generifiedEntries;
+    };
 
     /**
      *
@@ -40,7 +64,7 @@ public class ExpenseDataset extends Dataset {
         });
     }
 
-    private static class Entry implements Comparable<Entry> {
+    public static class Entry implements Comparable<Entry> {
         @Getter
         private final String account;
 

@@ -1,11 +1,13 @@
 package com.chemch.mienta.service;
 
 import com.chemch.mienta.manager.DatasetManager;
+import com.chemch.mienta.model.dataset.Dataset;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -31,5 +33,11 @@ public class DatasetService {
         List<String> datasetIds = new ArrayList<>();
         datasetManager.getDatasets().forEach((_, dataset) -> datasetIds.add(dataset.getId().toString()));
         return datasetIds;
+    }
+
+    public List<Dataset> getDatasetsByIds(List<UUID> datasetIds) {
+        List<Dataset> datasets = new ArrayList<>();
+        datasetIds.forEach((id) -> datasets.add(datasetManager.getDatasets().get(id)));
+        return datasets;
     }
 }

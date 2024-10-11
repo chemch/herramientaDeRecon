@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -51,10 +52,21 @@ public class ReconConfigController {
      *
      * @return
      */
+    @GetMapping(value = "active", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getActiveConfigId() {
+        String activeConfigId = reconConfigService.getActiveConfigId();
+        return new ResponseEntity<>(activeConfigId, HttpStatus.OK);
+    }
+
+
+    /**
+     *
+     * @return
+     */
     @GetMapping(value = "ids", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getConfigIds() {
-        List<String> uploadIds = reconConfigService.getConfigIds();
-        return new ResponseEntity<>(uploadIds, HttpStatus.OK);
+        List<String> configIds = reconConfigService.getConfigIds();
+        return new ResponseEntity<>(configIds, HttpStatus.OK);
     }
 
     /**
@@ -62,7 +74,7 @@ public class ReconConfigController {
      * @param id
      * @return
      */
-    @PostMapping("set/{id}")
+    @PutMapping("activate/{id}")
     @ResponseBody
     public ResponseEntity<String> activateConfig(@PathVariable String id) {
         try {
