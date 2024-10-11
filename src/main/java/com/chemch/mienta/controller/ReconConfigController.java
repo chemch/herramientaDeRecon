@@ -13,20 +13,31 @@ import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
-
+/**
+ *
+ */
 @Controller
 @RequestMapping("/config")
 @Slf4j
 public class ReconConfigController {
     private final ReconConfigService reconConfigService;
 
+    /**
+     *
+     * @param reconConfigService
+     */
     public ReconConfigController(ReconConfigService reconConfigService) {
         this.reconConfigService = reconConfigService;
     }
 
+    /**
+     *
+     * @param config
+     * @return
+     */
     @PutMapping("load")
     @ResponseBody
-    public ResponseEntity<JsonObject> setConfig(@RequestBody String config) {
+    public ResponseEntity<String> setConfig(@RequestBody String config) {
         try {
             JsonObject configJson = (JsonObject) JsonParser.parseString(config);
             reconConfigService.loadConfig(configJson);
@@ -36,15 +47,24 @@ public class ReconConfigController {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @GetMapping(value = "ids", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getConfigIds() {
         List<String> uploadIds = reconConfigService.getConfigIds();
         return new ResponseEntity<>(uploadIds, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param id
+     * @return
+     */
     @PostMapping("set/{id}")
     @ResponseBody
-    public ResponseEntity<JsonObject> activateConfig(@PathVariable String id) {
+    public ResponseEntity<String> activateConfig(@PathVariable String id) {
         try {
             reconConfigService.setActiveConfig(id);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -53,9 +73,15 @@ public class ReconConfigController {
         }
     }
 
+    /**
+     *
+     * @param config
+     * @param id
+     * @return
+     */
     @PutMapping("customize/{id}")
     @ResponseBody
-    public ResponseEntity<JsonObject> customizeConfig(@RequestBody String config, @PathVariable String id) {
+    public ResponseEntity<String> customizeConfig(@RequestBody String config, @PathVariable String id) {
         try {
             JsonObject configJson = (JsonObject) JsonParser.parseString(config);
             reconConfigService.customizeConfig(id, configJson);

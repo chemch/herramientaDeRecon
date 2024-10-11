@@ -13,22 +13,42 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ */
 @Service
 @Slf4j
 public class UploadService {
     private final UploadManager uploadManager;
     private final DatasetManager datasetManager;
 
+    /**
+     *
+     * @param uploadManager
+     * @param datasetManager
+     */
     public UploadService(UploadManager uploadManager, DatasetManager datasetManager) {
         this.uploadManager = uploadManager;
         this.datasetManager = datasetManager;
     }
 
+    /**
+     *
+     * @param upload
+     * @param uploadType
+     * @param datasetType
+     */
     public void uploadDataset(JsonArray upload, UploadType uploadType, DatasetType datasetType) {
         Upload parsed = uploadManager.parse(upload, uploadType);
         datasetManager.convert(parsed, datasetType);
     }
 
+    /**
+     *
+     * @param uploadArr
+     * @param uploadType
+     * @param datasetType
+     */
     public void uploadMultiDataset(JsonArray uploadArr, UploadType uploadType, DatasetType datasetType) {
         for (JsonElement upload : uploadArr) {
             JsonArray uploadJsonArray = (JsonArray) upload;
@@ -36,6 +56,10 @@ public class UploadService {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public List<String> getUploadIds() {
         List<String> uploadIds = new ArrayList<>();
         datasetManager.getDatasets().forEach((_, dataset) -> uploadIds.add(dataset.getUpload().getId().toString()));

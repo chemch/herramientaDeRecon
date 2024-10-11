@@ -11,12 +11,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ *
+ */
 @Component
 public class DatasetManager {
     @Getter
     private final Map<UUID, Dataset> datasets = new HashMap<>();
     private final DatasetFactory factory;
 
+    /**
+     *
+     * @param factory
+     */
     public DatasetManager(DatasetFactory factory) {
         this.factory = factory;
     }
@@ -25,6 +32,12 @@ public class DatasetManager {
         // TODO define dataset validations - Milestone 2
     }
 
+    /**
+     *
+     * @param upload
+     * @param type
+     * @return
+     */
     public Dataset convert(Upload upload, DatasetType type) {
         // convert upload to applicable dataset
         Dataset dataset = factory.create(upload, type);

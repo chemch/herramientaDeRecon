@@ -16,18 +16,31 @@ import java.util.List;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
+/**
+ *
+ */
 @Controller
 @RequestMapping("/upload")
 @Slf4j
 public class UploadController {
     private final UploadService uploadService;
 
+    /**
+     *
+     * @param uploadService
+     */
     public UploadController(UploadService uploadService) {
         this.uploadService = uploadService;
     }
 
+    /**
+     *
+     * @param upload
+     * @param datasetType
+     * @return
+     */
     @PutMapping(value = "dataset/{datasetType}")
-    public ResponseEntity<JsonObject> uploadDataset(@RequestBody String upload, @PathVariable String datasetType) {
+    public ResponseEntity<String> uploadDataset(@RequestBody String upload, @PathVariable String datasetType) {
         try {
             JsonArray uploadJson = (JsonArray) JsonParser.parseString(upload);
             uploadService.uploadDataset(uploadJson, UploadType.JSON, DatasetType.valueOf(datasetType.toUpperCase()));
@@ -37,15 +50,25 @@ public class UploadController {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @GetMapping(value = "ids", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getUploadIds() {
         List<String> uploadIds = uploadService.getUploadIds();
         return new ResponseEntity<>(uploadIds, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param multiUpload
+     * @param datasetType
+     * @return
+     */
     @PutMapping("multi-dataset/{datasetType}")
     @ResponseBody
-    public ResponseEntity<JsonObject> uploadMultiDataset(@RequestBody String multiUpload, @PathVariable String datasetType) {
+    public ResponseEntity<String> uploadMultiDataset(@RequestBody String multiUpload, @PathVariable String datasetType) {
         try {
             JsonArray uploadJsonArray = (JsonArray) JsonParser.parseString(multiUpload);
             // pass full set of datasets to be parsed

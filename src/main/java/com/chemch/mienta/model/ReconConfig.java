@@ -6,6 +6,9 @@ import lombok.Getter;
 
 import java.util.*;
 
+/**
+ *
+ */
 public class ReconConfig extends Trackable {
     @Getter @Expose
     private final List<String> fields = new ArrayList<>();

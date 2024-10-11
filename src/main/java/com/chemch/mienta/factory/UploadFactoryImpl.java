@@ -9,8 +9,18 @@ import com.google.gson.JsonObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+/**
+ *
+ */
 @Component
 public class UploadFactoryImpl implements  UploadFactory {
+
+    /**
+     *
+     * @param upload
+     * @param type
+     * @return
+     */
     @Override
     public Upload create(JsonArray upload, UploadType type) {
         // create an instance of a supported upload type

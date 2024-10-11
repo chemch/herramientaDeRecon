@@ -6,6 +6,9 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ *
+ */
 public abstract class Trackable {
     @Getter @Expose
     private final UUID id = UUID.randomUUID();

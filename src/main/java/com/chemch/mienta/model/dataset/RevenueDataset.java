@@ -7,6 +7,9 @@ import lombok.Getter;
 
 import java.util.*;
 
+/**
+ *
+ */
 public class RevenueDataset extends Dataset {
     @Getter
     private final DatasetType type = DatasetType.REVENUE;
@@ -56,12 +59,20 @@ public class RevenueDataset extends Dataset {
             this.potentialLowAmount = this.getAmount() / multiplier;
         }
 
+        /**
+         *
+         * @param that the object to be compared.
+         * @return
+         */
         @Override
         public int compareTo(Entry that) {
             return this.hashCode() - that.hashCode();
         }
     }
 
+    /**
+     *
+     */
     public static class Builder {
         private final Gson gson = new Gson();
 
@@ -74,6 +85,10 @@ public class RevenueDataset extends Dataset {
             this.upload = upload;
         }
 
+        /**
+         *
+         * @return
+         */
         public RevenueDataset build() {
             upload.getSource().forEach(_row -> {
                 // convert json element to json object

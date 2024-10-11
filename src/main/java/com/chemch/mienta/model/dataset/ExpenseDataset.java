@@ -6,6 +6,9 @@ import lombok.Getter;
 
 import java.util.*;
 
+/**
+ *
+ */
 public class ExpenseDataset extends Dataset {
     @Getter
     private final DatasetType type = DatasetType.EXPENSE;
@@ -13,6 +16,10 @@ public class ExpenseDataset extends Dataset {
     @Getter
     private final Set<Entry> entries = new TreeSet<>();
 
+    /**
+     *
+     * @param upload
+     */
     public ExpenseDataset(Upload upload) {
         super(upload);
 
@@ -53,6 +60,11 @@ public class ExpenseDataset extends Dataset {
             this.totalCost = unitCost * unitCount;
         }
 
+        /**
+         *
+         * @param that the object to be compared.
+         * @return
+         */
         @Override
         public int compareTo(Entry that) {
             return this.hashCode() - that.hashCode();

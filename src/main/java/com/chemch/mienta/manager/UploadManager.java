@@ -10,10 +10,17 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+/**
+ *
+ */
 @Component
 public class UploadManager {
     private final UploadFactory factory;
 
+    /**
+     *
+     * @param factory
+     */
     public UploadManager(UploadFactory factory) {
         this.factory = factory;
     }
@@ -22,6 +29,12 @@ public class UploadManager {
         // TODO define validations - Milestone 2
     }
 
+    /**
+     *
+     * @param uploadJson
+     * @param type
+     * @return
+     */
     public Upload parse(JsonArray uploadJson, UploadType type) {
         // validate uploaded json
         validate(uploadJson);
