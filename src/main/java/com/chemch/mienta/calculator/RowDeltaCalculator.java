@@ -4,20 +4,28 @@ import com.chemch.mienta.model.ReconConfig;
 import com.chemch.mienta.model.dataset.Dataset;
 import com.google.gson.JsonArray;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+/**
+ * calculator that works at row level
+ */
 public class RowDeltaCalculator {
     private final ReconConfig reconConfig;
     private final List<Dataset> datasets;
 
+    /**
+     * @param reconConfig dependency
+     * @param datasets to rec
+     */
     public RowDeltaCalculator(ReconConfig reconConfig, List<Dataset> datasets) {
         this.reconConfig = reconConfig;
         this.datasets = datasets;
     }
 
+    /**
+     * @return array of breaks
+     * @throws IllegalAccessException
+     */
     public JsonArray calculate() throws IllegalAccessException {
         // get fields to be compared on
         List<String> compareFields = reconConfig.getFields();
@@ -31,19 +39,27 @@ public class RowDeltaCalculator {
         JsonArray rowDeltaArr = new JsonArray();
 
         // check rows for mismatches
-        for ( Set<Map<String, Object>> thisDataset: datasetEntryLists) {
-            for (Map<String, Object> thisRow : thisDataset) {
-                for ( Set<Map<String, Object>> thatDataset: datasetEntryLists) {
+        for(Iterator<Set<Map<String, Object>>> thisDatasetIter = datasetEntryLists.iterator(); thisDatasetIter.hasNext(); ) {
+            Set<Map<String, Object>> thisDataset = thisDatasetIter.next();
+
+            for (Iterator<Map<String, Object>> thisRowIter = thisDataset.iterator(); thisRowIter.hasNext(); ) {
+                Map<String, Object> thisRow = thisRowIter.next();
+
+                for(Iterator<Set<Map<String, Object>>> thatDatasetIter = datasetEntryLists.iterator(); thatDatasetIter.hasNext(); ) {
+                    Set<Map<String, Object>> thatDataset = thatDatasetIter.next();
 
                     // skip any self references
                     if(thisDataset == thatDataset)
                         continue;
 
                     // compare this row to all rows in the other datasets, deleting them when a match is found
-                    for (Map<String, Object> thatRow : thatDataset) {
+                    //for (Map<String, Object> thatRow : thatDatasetIter.next()) {
+                    for (Iterator<Map<String, Object>> thatRowIter = thatDataset.iterator(); thatRowIter.hasNext(); ) {
+                        Map<String, Object> thatRow = thatRowIter.next();
+
                         if (thisRow.equals(thatRow)) {
-                            thisDataset.remove(thisRow);
-                            thatDataset.remove(thatRow);
+                            thisRowIter.remove();
+                            thatRowIter.remove();
                         }
                     }
                 }
@@ -51,9 +67,9 @@ public class RowDeltaCalculator {
         }
 
         // add whatever rows remain as that is the delta of rows
-        for ( Set<Map<String, Object>> deltaDataset: datasetEntryLists) {
-            rowDeltaArr.add(deltaDataset.toString());
-        }
+        for ( Set<Map<String, Object>> deltaDataset: datasetEntryLists)
+            if(!deltaDataset.isEmpty())
+                rowDeltaArr.add(deltaDataset.toString());
 
         return rowDeltaArr;
     }
