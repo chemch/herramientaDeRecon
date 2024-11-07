@@ -5,17 +5,21 @@ import com.chemch.mienta.model.dataset.Dataset;
 import com.chemch.mienta.model.upload.Upload;
 import com.chemch.mienta.model.upload.UploadType;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
 import java.util.*;
+import java.util.zip.DataFormatException;
+import static com.chemch.mienta.common.Constants.INVALID_DATA_MSG;
 
 /**
  *
  */
 @Component
+@Slf4j
 public class UploadManager {
+    private final int MAX_LOG_CHAR_LIMIT = 15;
+
     @Getter
     private final Map<UUID, UUID> uploadToDatasetMap = new HashMap<>();
 
@@ -29,8 +33,12 @@ public class UploadManager {
         this.factory = factory;
     }
 
-    private void validate(JsonArray upload) {
-        // TODO define validations - Milestone 2
+    private void validate(JsonArray upload) throws DataFormatException {
+        log.info("Validating {}...", upload.toString().substring(0, Math.min(MAX_LOG_CHAR_LIMIT, upload.toString().length())));
+
+        // throw if empty upload is provided
+        if (upload.isEmpty())
+            throw new DataFormatException(INVALID_DATA_MSG);
     }
 
     /**
@@ -39,7 +47,7 @@ public class UploadManager {
      * @param type
      * @return
      */
-    public Upload parse(JsonArray uploadJson, UploadType type) {
+    public Upload parse(JsonArray uploadJson, UploadType type) throws DataFormatException {
         // validate uploaded json
         validate(uploadJson);
 
@@ -52,6 +60,6 @@ public class UploadManager {
      * @param dataset
      */
     public void register(Upload upload, Dataset dataset) {
-        this.uploadToDatasetMap.put(upload.getId(), dataset.getId());
+        this.uploadToDatasetMap.put(upload.getTrackId(), dataset.getTrackId());
     }
 }

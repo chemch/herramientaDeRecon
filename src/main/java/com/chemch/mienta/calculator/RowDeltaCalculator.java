@@ -39,17 +39,13 @@ public class RowDeltaCalculator {
         JsonArray rowDeltaArr = new JsonArray();
 
         // check rows for mismatches
-        for(Iterator<Set<Map<String, Object>>> thisDatasetIter = datasetEntryLists.iterator(); thisDatasetIter.hasNext(); ) {
-            Set<Map<String, Object>> thisDataset = thisDatasetIter.next();
-
+        for (Set<Map<String, Object>> thisDataset : datasetEntryLists) {
             for (Iterator<Map<String, Object>> thisRowIter = thisDataset.iterator(); thisRowIter.hasNext(); ) {
                 Map<String, Object> thisRow = thisRowIter.next();
 
-                for(Iterator<Set<Map<String, Object>>> thatDatasetIter = datasetEntryLists.iterator(); thatDatasetIter.hasNext(); ) {
-                    Set<Map<String, Object>> thatDataset = thatDatasetIter.next();
-
+                for (Set<Map<String, Object>> thatDataset : datasetEntryLists) {
                     // skip any self references
-                    if(thisDataset == thatDataset)
+                    if (thisDataset == thatDataset)
                         continue;
 
                     // compare this row to all rows in the other datasets, deleting them when a match is found

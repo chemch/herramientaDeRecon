@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.DataFormatException;
+
+import static com.chemch.mienta.common.Constants.INVALID_DATA_MSG;
 
 /**
  *
@@ -40,7 +43,7 @@ public class UploadService {
      * @param uploadType
      * @param datasetType
      */
-    public void uploadDataset(JsonArray upload, UploadType uploadType, DatasetType datasetType) {
+    public void uploadDataset(JsonArray upload, UploadType uploadType, DatasetType datasetType) throws DataFormatException {
         // parse upload
         Upload parsed = uploadManager.parse(upload, uploadType);
 
@@ -57,7 +60,10 @@ public class UploadService {
      * @param uploadType
      * @param datasetType
      */
-    public void uploadMultiDataset(JsonArray uploadArr, UploadType uploadType, DatasetType datasetType) {
+    public void uploadMultiDataset(JsonArray uploadArr, UploadType uploadType, DatasetType datasetType) throws DataFormatException {
+        if(uploadArr.isEmpty())
+            throw new DataFormatException(INVALID_DATA_MSG);
+
         for (JsonElement upload : uploadArr) {
             JsonArray uploadJsonArray = (JsonArray) upload;
             uploadDataset(uploadJsonArray, uploadType, datasetType);
@@ -70,7 +76,7 @@ public class UploadService {
      */
     public List<String> getUploadIds() {
         List<String> uploadIds = new ArrayList<>();
-        datasetManager.getDatasets().forEach((_, dataset) -> uploadIds.add(dataset.getUpload().getId().toString()));
+        datasetManager.getDatasets().forEach((_, dataset) -> uploadIds.add(dataset.getUpload().getTrackId().toString()));
         return uploadIds;
     }
 

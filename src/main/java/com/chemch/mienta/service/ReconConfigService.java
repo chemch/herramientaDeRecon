@@ -32,12 +32,12 @@ public class ReconConfigService {
      */
     public void loadConfig(JsonObject configJson) {
         ReconConfig config = gson.fromJson(configJson, ReconConfig.class);
-        this.configs.put(config.getId(), config);
+        this.configs.put(config.getTrackId(), config);
     }
 
     public String getActiveConfigId() {
         ReconConfig activeReconConfig = getActiveConfig();
-        return activeReconConfig != null ? activeReconConfig.getId().toString(): NO_CONFIG_ID;
+        return activeReconConfig != null ? activeReconConfig.getTrackId().toString(): NO_CONFIG_ID;
     }
 
     /**

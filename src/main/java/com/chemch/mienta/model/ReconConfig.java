@@ -9,15 +9,16 @@ import java.util.*;
 /**
  *
  */
+@Getter
 public class ReconConfig extends Trackable {
-    @Getter @Expose
+    @Expose
     private final List<String> fields = new ArrayList<>();
 
-    @Getter @Expose
+    @Expose
     @SerializedName("uploads")
     private final List<UUID> uploadIds = new ArrayList<>();
 
-    @Getter @Expose
+    @Expose
     @SerializedName("datasets")
     private final List<UUID> datasetIds = new ArrayList<>();
 }

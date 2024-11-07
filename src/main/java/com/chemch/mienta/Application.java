@@ -2,11 +2,14 @@ package com.chemch.mienta;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 
 /**
- *
+ * application to generate break reports
  */
-@SpringBootApplication
+@EnableNeo4jRepositories
+@SpringBootApplication()
 public class Application {
 
 	/**

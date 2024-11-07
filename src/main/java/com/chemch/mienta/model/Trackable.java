@@ -9,10 +9,11 @@ import java.util.UUID;
 /**
  *
  */
+@Getter
 public abstract class Trackable {
-    @Getter @Expose
-    private final UUID id = UUID.randomUUID();
+    @Expose
+    private final UUID trackId = UUID.randomUUID();
 
-    @Getter @Expose
+    @Expose
     private final LocalDateTime timestamp = LocalDateTime.now();
 }

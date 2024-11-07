@@ -1,0 +1,14 @@
+logging:
+  level:
+    web: WARN
+spring:
+  application:
+    name: mienta
+  main:
+    banner-mode: off
+  neo4j:
+    authentication:
+      username: neo4j
+    uri: bolt://localhost:7687
+  profiles:
+    active: local

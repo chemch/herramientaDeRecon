@@ -18,10 +18,6 @@ public class RevenueDataset extends Dataset {
     @Getter
     private final Set<Entry> entries;
 
-    public Set<Entry> getEntries() {
-        return entries;
-    }
-
     @Override
     public Set<Map<String, Object>> getGenerifiedEntries(List<String> compareFields) throws IllegalAccessException {
         // convert set of entries to objects

@@ -31,10 +31,14 @@ public class DatasetService {
      */
     public List<String> getDatasetIds() {
         List<String> datasetIds = new ArrayList<>();
-        datasetManager.getDatasets().forEach((_, dataset) -> datasetIds.add(dataset.getId().toString()));
+        datasetManager.getDatasets().forEach((_, dataset) -> datasetIds.add(dataset.getTrackId().toString()));
         return datasetIds;
     }
 
+    /**
+     * @param datasetIds
+     * @return
+     */
     public List<Dataset> getDatasetsByIds(List<UUID> datasetIds) {
         List<Dataset> datasets = new ArrayList<>();
         datasetIds.forEach((id) -> datasets.add(datasetManager.getDatasets().get(id)));

@@ -75,7 +75,7 @@ public class UploadController {
             uploadService.uploadMultiDataset(uploadJsonArray, UploadType.JSON, DatasetType.valueOf(datasetType.toUpperCase()));
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

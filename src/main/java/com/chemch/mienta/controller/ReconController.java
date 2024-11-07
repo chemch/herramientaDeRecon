@@ -1,8 +1,11 @@
 package com.chemch.mienta.controller;
 
+import com.chemch.mienta.model.Recon;
 import com.chemch.mienta.service.ReconConfigService;
 import com.chemch.mienta.service.ReconService;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
- *
+ * recon controller
  */
 @Controller
 @RequestMapping("/recon")
@@ -21,7 +24,7 @@ public class ReconController {
 
     /**
      *
-     * @param reconService
+     * @param reconService dependency
      */
     public ReconController(ReconService reconService, ReconConfigService reconConfigService) {
         this.reconService = reconService;
@@ -29,8 +32,8 @@ public class ReconController {
     }
 
     /**
-     * @param configId
-     * @return
+     * @param configId to use for run
+     * @return deltas
      */
     @PostMapping("run/{configId}")
     @ResponseBody
@@ -40,12 +43,41 @@ public class ReconController {
             if ((configId == null || configId.isEmpty()) &&
                     reconConfigService.getActiveConfig() == null)  {
                 throw new Exception("No active config found");
-            }  else if (!configId.isEmpty())
+            }  else if (configId != null && !configId.isEmpty())
                 reconConfigService.setActiveConfig(configId);
+            else
+                log.info("No active config provided");
 
             // run recon
             JsonArray reconJson = reconService.runRecon();
             return new ResponseEntity<>(reconJson.toString(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("save")
+    @ResponseBody
+    public ResponseEntity<String> saveRecon(@RequestBody String reconInput) {
+        try {
+            if (reconInput != null && !reconInput.isEmpty()) {
+                JsonObject reconArray = (JsonObject) JsonParser.parseString(reconInput);
+                reconService.saveRecon(reconArray);
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("delete/{reconId}")
+    @ResponseBody
+    public ResponseEntity<String> deleteRecon(@PathVariable String reconId) {
+        try {
+            reconService.deleteRecon(reconId);
+
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
