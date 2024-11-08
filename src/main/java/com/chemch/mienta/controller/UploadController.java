@@ -9,6 +9,7 @@ import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,7 @@ public class UploadController {
      * @param datasetType
      * @return
      */
+    @PreAuthorize("hasRole('USER')")
     @PutMapping(value = "dataset/{datasetType}")
     public ResponseEntity<String> uploadDataset(@RequestBody String upload, @PathVariable String datasetType) {
         try {
@@ -52,10 +54,29 @@ public class UploadController {
 
     /**
      *
+     * @param upload
+     * @param datasetType
      * @return
      */
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping(value = "test")
+    public ResponseEntity<String> testEndpoint(@RequestBody String upload) {
+        try {
+            log.info("Test endpoint called with {}", upload);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    @PreAuthorize("hasRole('USER')")
     @GetMapping(value = "ids", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getUploadIds() {
+        log.info("Getting upload ids...");
         List<String> uploadIds = uploadService.getUploadIds();
         return new ResponseEntity<>(uploadIds, HttpStatus.OK);
     }
@@ -66,6 +87,7 @@ public class UploadController {
      * @param datasetType
      * @return
      */
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("multi-dataset/{datasetType}")
     @ResponseBody
     public ResponseEntity<String> uploadMultiDataset(@RequestBody String multiUpload, @PathVariable String datasetType) {

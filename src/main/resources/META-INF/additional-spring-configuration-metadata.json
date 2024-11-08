@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "demo.user.name",
+      "type": "java.lang.String",
+      "description": "Description for local.user.name."
+    },
+    {
+      "name": "demo.user.password",
+      "type": "java.lang.String",
+      "description": "Description for local.user.password."
+    }
+  ] }

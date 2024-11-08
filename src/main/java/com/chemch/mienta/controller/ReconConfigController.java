@@ -6,11 +6,11 @@ import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -36,6 +36,7 @@ public class ReconConfigController {
      * @param config
      * @return
      */
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("load")
     @ResponseBody
     public ResponseEntity<String> setConfig(@RequestBody String config) {
@@ -52,6 +53,7 @@ public class ReconConfigController {
      *
      * @return
      */
+    @PreAuthorize("hasRole('USER')")
     @GetMapping(value = "active", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getActiveConfigId() {
         String activeConfigId = reconConfigService.getActiveConfigId();
@@ -63,6 +65,7 @@ public class ReconConfigController {
      *
      * @return
      */
+    @PreAuthorize("hasRole('USER')")
     @GetMapping(value = "ids", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<String>> getConfigIds() {
         List<String> configIds = reconConfigService.getConfigIds();
@@ -74,6 +77,7 @@ public class ReconConfigController {
      * @param id
      * @return
      */
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("activate/{id}")
     @ResponseBody
     public ResponseEntity<String> activateConfig(@PathVariable String id) {
@@ -91,6 +95,7 @@ public class ReconConfigController {
      * @param id
      * @return
      */
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("customize/{id}")
     @ResponseBody
     public ResponseEntity<String> customizeConfig(@RequestBody String config, @PathVariable String id) {
