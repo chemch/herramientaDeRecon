@@ -1,7 +1,9 @@
 package com.chemch.mienta.model;
 
 import com.google.gson.annotations.Expose;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,9 +13,9 @@ import java.util.UUID;
  */
 @Getter
 public abstract class Trackable {
-    @Expose
-    private final UUID trackId = UUID.randomUUID();
+    @Expose @Setter
+    private UUID trackId = UUID.randomUUID();;
 
-    @Expose
-    private final LocalDateTime timestamp = LocalDateTime.now();
+    @Expose @Setter
+    private LocalDateTime timestamp = LocalDateTime.now();
 }

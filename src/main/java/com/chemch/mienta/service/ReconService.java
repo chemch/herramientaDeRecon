@@ -5,13 +5,11 @@ import com.chemch.mienta.model.Recon;
 import com.chemch.mienta.model.ReconConfig;
 import com.chemch.mienta.model.dataset.Dataset;
 import com.chemch.mienta.persistence.ReconRepo;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,5 +70,23 @@ public class ReconService {
     public void deleteRecon(String reconId) {
         UUID uuid = UUID.fromString(reconId);
         reconRepo.deleteById(uuid);
+    }
+
+
+    /**
+     * @return
+     */
+    public JsonArray getAllReconIds() {
+        // get iterable for all from rep
+        Iterable<Recon> reconIter = reconRepo.findAll();
+
+        // create rv for recons
+        JsonArray recons = new JsonArray();
+
+        // convert each to json and add to rv
+        for (Recon recon : reconIter)
+            recons.add(new JsonPrimitive(String.valueOf(recon.getId())));
+
+         return recons;
     }
 }

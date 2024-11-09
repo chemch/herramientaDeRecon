@@ -1,6 +1,5 @@
 package com.chemch.mienta.controller;
 
-import com.chemch.mienta.model.Recon;
 import com.chemch.mienta.service.ReconConfigService;
 import com.chemch.mienta.service.ReconService;
 import com.google.gson.JsonArray;
@@ -37,7 +36,7 @@ public class ReconController {
      */
     @PostMapping("run/{configId}")
     @ResponseBody
-    public ResponseEntity<String> runRecon(@PathVariable String configId) {
+    public ResponseEntity<String> runReconWithParam(@PathVariable(required = true) String configId) {
         try {
             // throw no active config is available or being provided
             if ((configId == null || configId.isEmpty()) &&
@@ -47,6 +46,37 @@ public class ReconController {
                 reconConfigService.setActiveConfig(configId);
             else
                 log.info("No active config provided");
+
+            // run recon
+            JsonArray reconJson = reconService.runRecon();
+            return new ResponseEntity<>(reconJson.toString(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("runs")
+    @ResponseBody
+    public ResponseEntity<String> getRecons() {
+        try {
+           // get recons
+            JsonArray reconIdsArr = reconService.getAllReconIds();
+            return new ResponseEntity<>(reconIdsArr.toString(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @return deltas
+     */
+    @PostMapping("run")
+    @ResponseBody
+    public ResponseEntity<String> runReconWithoutParam() {
+        try {
+            // throw no active config is available or being provided
+            if (reconConfigService.getActiveConfig() == null)
+                throw new Exception("No active config found");
 
             // run recon
             JsonArray reconJson = reconService.runRecon();
