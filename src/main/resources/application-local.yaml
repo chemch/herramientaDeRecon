@@ -1,6 +1,10 @@
 server:
   port: 5555
 spring:
+  security:
+    user:
+      name: dillan
+      password: yankees
   neo4j:
     authentication:
       password: JT7MOm6A9a%o8e11

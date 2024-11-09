@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class ReconController {
      */
     @PostMapping("run/{configId}")
     @ResponseBody
+
     public ResponseEntity<String> runReconWithParam(@PathVariable(required = true) String configId) {
         try {
             // throw no active config is available or being provided
@@ -57,6 +59,7 @@ public class ReconController {
 
     @GetMapping("runs")
     @ResponseBody
+
     public ResponseEntity<String> getRecons() {
         try {
            // get recons
@@ -72,6 +75,7 @@ public class ReconController {
      */
     @PostMapping("run")
     @ResponseBody
+
     public ResponseEntity<String> runReconWithoutParam() {
         try {
             // throw no active config is available or being provided
@@ -88,6 +92,7 @@ public class ReconController {
 
     @PutMapping("save")
     @ResponseBody
+
     public ResponseEntity<String> saveRecon(@RequestBody String reconInput) {
         try {
             if (reconInput != null && !reconInput.isEmpty()) {
@@ -103,6 +108,7 @@ public class ReconController {
 
     @DeleteMapping("delete/{reconId}")
     @ResponseBody
+
     public ResponseEntity<String> deleteRecon(@PathVariable String reconId) {
         try {
             reconService.deleteRecon(reconId);
